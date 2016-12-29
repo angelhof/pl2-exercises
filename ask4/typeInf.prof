@@ -1,0 +1,129 @@
+	Fri Dec 23 21:04 2016 Time and Allocation Profiling Report  (Final)
+
+	   typeInf +RTS -p -s -h -i0.1 -M28m -RTS
+
+	total time  =        0.35 secs   (351 ticks @ 1000 us, 1 processor)
+	total alloc = 951,988,736 bytes  (excludes profiling overheads)
+
+COST CENTRE                MODULE    %time %alloc
+
+replaceAllWith.replace     Main       33.6   21.5
+replaceAllWith             Main       29.6   39.9
+lexer                      Main       11.7   18.3
+languageDef                Main        7.7    5.8
+findRules.res              Main        2.6    3.1
+partOf                     Main        2.6    0.0
+main                       Main        2.0    1.4
+finalType.replace          Main        1.4    0.8
+prPrint.prPrint'           Main        1.4    2.2
+findRules.(...)            Main        1.1    0.5
+prepare.expressions        Main        0.3    1.9
+simplifyType.simplifyType' Main        0.0    1.0
+
+
+                                                                                      individual     inherited
+COST CENTRE                               MODULE                    no.     entries  %time %alloc   %time %alloc
+
+MAIN                                      MAIN                       76           0    0.0    0.0   100.0  100.0
+ main                                     Main                      153           0    2.0    1.4   100.0  100.0
+  prepare                                 Main                      154           1    0.0    0.0    98.0   98.6
+   prepare.pretty_print                   Main                      161           1    0.0    0.0     1.4    2.2
+    prPrint                               Main                      162         100    0.0    0.0     1.4    2.2
+     prPrint.prPrint'                     Main                      236       39900    1.4    2.2     1.4    2.2
+   prepare.simple_types                   Main                      160           1    0.0    0.0     0.3    1.3
+    prepare.simple_types.\                Main                      163         100    0.0    0.0     0.3    1.3
+     simplifyType                         Main                      164         100    0.0    0.0     0.3    1.3
+      simplifyType.fst'                   Main                      238         100    0.0    0.0     0.0    0.0
+      simplifyType.simplifyType'          Main                      237       39900    0.0    1.0     0.3    1.3
+       simplifyType.simplifyType'.mapper2 Main                      246        9900    0.0    0.0     0.0    0.0
+       simplifyType.simplifyType'.cnt1    Main                      244        9900    0.0    0.0     0.0    0.0
+       simplifyType.simplifyType'.mapper1 Main                      243       19900    0.0    0.0     0.0    0.0
+       simplifyType.simplifyType'.(...)   Main                      242       19900    0.3    0.1     0.3    0.1
+       simplifyType.simplifyType'.res2    Main                      241       19900    0.0    0.0     0.0    0.0
+       simplifyType.simplifyType'.(...)   Main                      240       19900    0.0    0.2     0.0    0.2
+       simplifyType.simplifyType'.res1    Main                      239       19900    0.0    0.0     0.0    0.0
+   prepare.replacements                   Main                      159           1    0.0    0.0    66.4   61.4
+    prepare.replacements.\                Main                      167         100    0.0    0.0    66.4   61.4
+     unify                                Main                      168       20000    0.6    0.1    66.4   61.4
+      replaceAllWith                      Main                      218       19900   29.6   39.9    63.2   61.4
+       replaceAllWith.replace             Main                      220     7880400   33.6   21.5    33.6   21.5
+      partOf                              Main                      215     1029900    2.6    0.0     2.6    0.0
+   prepare.finalTypes                     Main                      158           1    0.0    0.0     3.1    1.9
+    prepare.finalTypes.filter_errors      Main                      166         100    0.0    0.0     3.1    1.9
+     getType                              Main                      231         100    0.0    0.0     0.0    0.0
+     finalType                            Main                      227         100    0.0    0.0     3.1    1.9
+      finalType.all_mappings              Main                      234         100    0.0    0.0     1.4    0.8
+       finalType.replace                  Main                      235       19900    1.4    0.8     1.4    0.8
+      finalType.mapper                    Main                      233         100    0.9    0.9     0.9    0.9
+      finalType.rec_find                  Main                      228       50000    0.3    0.2     0.9    0.2
+       finalType.rec_find.rep             Main                      230       30100    0.6    0.0     0.6    0.0
+       ==                                 Main                      229       30100    0.0    0.0     0.0    0.0
+   prepare.annot_asts_and_rules           Main                      157           1    0.0    0.0     5.4    4.5
+    find_rules                            Main                      165         100    0.0    0.0     5.4    4.5
+     find_rules.annot_ast                 Main                      232         100    0.0    0.0     0.0    0.0
+     find_rules.(...)                     Main                      170         100    0.0    0.0     5.4    4.5
+      findRules                           Main                      171       29900    0.9    0.7     5.4    4.5
+       findRules.rules2                   Main                      226        9900    0.0    0.0     0.0    0.0
+       findRules.rules1                   Main                      225        9900    0.0    0.0     0.0    0.0
+       findRules.annot_exp2               Main                      224        9900    0.0    0.0     0.0    0.0
+       findRules.annot_exp1               Main                      223        9900    0.0    0.0     0.0    0.0
+       findRules.rule                     Main                      221        9900    0.6    0.0     0.6    0.0
+        getType                           Main                      222       19800    0.0    0.0     0.0    0.0
+       findRules.rules                    Main                      219       10000    0.0    0.0     0.0    0.0
+       findRules.annot_body               Main                      217       10000    0.0    0.0     0.0    0.0
+       findRules.rules'                   Main                      214       10000    0.0    0.0     0.0    0.0
+        getType                           Main                      216       10000    0.0    0.0     0.0    0.0
+       findRules.res                      Main                      213       10000    0.0    0.1     0.0    0.1
+       findRules.cnt'                     Main                      212       10000    0.0    0.0     0.0    0.0
+       findRules.(...)                    Main                      211        9900    0.0    0.1     0.0    0.1
+       findRules.cnt2                     Main                      210        9900    0.0    0.0     0.0    0.0
+       findRules.res                      Main                      209        9900    2.6    3.1     2.6    3.1
+       findRules.cnt1                     Main                      208        9900    0.0    0.0     0.0    0.0
+       findRules.(...)                    Main                      207        9900    0.3    0.0     0.3    0.0
+       findRules.(...)                    Main                      205       10000    1.1    0.5     1.1    0.5
+        findRules.add_or_update           Main                      206       10000    0.0    0.0     0.0    0.0
+     find_rules.rules_set                 Main                      169         100    0.0    0.0     0.0    0.0
+   prepare.asts                           Main                      156           1    0.3    0.0    21.1   25.5
+    parseString                           Main                      172         100    0.0    0.0    20.8   25.5
+     expression                           Main                      174           0    0.3    0.2    20.8   25.5
+      parens                              Main                      183           0    0.0    0.0    12.3   15.0
+       lexer                              Main                      184           0    8.3   11.9    12.3   15.0
+        languageDef                       Main                      192           0    3.1    2.3     3.7    2.6
+         expression'                      Main                      193           0    0.0    0.0     0.6    0.3
+          funExpr                         Main                      194           0    0.6    0.3     0.6    0.3
+        funExpr                           Main                      191           0    0.0    0.0     0.0    0.0
+        expression'                       Main                      186           0    0.3    0.2     0.3    0.5
+         appExpr                          Main                      196           0    0.0    0.1     0.0    0.1
+         funExpr                          Main                      188           0    0.0    0.3     0.0    0.3
+      idExpr                              Main                      176           0    0.3    0.2     8.3   10.3
+       parens                             Main                      197           0    0.0    0.0     3.4    5.0
+        lexer                             Main                      198           0    3.4    4.7     3.4    5.0
+         languageDef                      Main                      201           0    0.0    0.0     0.0    0.1
+          expression'                     Main                      202           0    0.0    0.0     0.0    0.1
+           funExpr                        Main                      203           0    0.0    0.1     0.0    0.1
+         expression'                      Main                      199           0    0.0    0.0     0.0    0.2
+          appExpr                         Main                      200           0    0.0    0.2     0.0    0.2
+       lexer                              Main                      179           0    0.0    1.7     4.6    5.2
+        languageDef                       Main                      181           0    4.6    3.5     4.6    3.5
+   prepare.expressions                    Main                      155           1    0.3    1.9     0.3    1.9
+ CAF                                      Main                      151           0    0.0    0.0     0.0    0.0
+  prPrint.prPrint'                        Main                      245           0    0.0    0.0     0.0    0.0
+  appExpr                                 Main                      195           1    0.0    0.0     0.0    0.0
+  reserved                                Main                      189           1    0.0    0.0     0.0    0.0
+  funExpr                                 Main                      187           1    0.0    0.0     0.0    0.0
+   lexer                                  Main                      190           0    0.0    0.0     0.0    0.0
+  expression'                             Main                      185           1    0.0    0.0     0.0    0.0
+  languageDef                             Main                      180           1    0.0    0.0     0.0    0.0
+  lexer                                   Main                      178           1    0.0    0.0     0.0    0.0
+  identifier                              Main                      177           1    0.0    0.0     0.0    0.0
+  idExpr                                  Main                      175           1    0.0    0.0     0.0    0.0
+  expression                              Main                      173           1    0.0    0.0     0.0    0.0
+   parens                                 Main                      182           1    0.0    0.0     0.0    0.0
+  main                                    Main                      152           1    0.0    0.0     0.0    0.0
+ CAF                                      Text.Parsec.Token         146           0    0.0    0.0     0.0    0.0
+ CAF                                      Text.Parsec.Language      145           0    0.0    0.0     0.0    0.0
+ CAF                                      GHC.IO.Handle.FD          125           0    0.0    0.0     0.0    0.0
+ CAF                                      GHC.IO.Handle.Internals   122           0    0.0    0.0     0.0    0.0
+ CAF                                      GHC.Conc.Signal           114           0    0.0    0.0     0.0    0.0
+ CAF                                      GHC.IO.Encoding           111           0    0.0    0.0     0.0    0.0
+ CAF                                      GHC.IO.Encoding.Iconv      90           0    0.0    0.0     0.0    0.0

@@ -1,0 +1,9 @@
+TODO
+=====
+
+1. Find the small mistake in the exercise
+
+2. Optimize more
+   -> preorder.preos.ls' is problematic
+      -> Solve by changing the ++ part 
+      -> Or change the list to another datatype

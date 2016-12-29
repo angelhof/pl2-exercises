@@ -1,0 +1,98 @@
+	Tue Nov  8 00:49 2016 Time and Allocation Profiling Report  (Final)
+
+	   ask1 +RTS -p -s -h -i0.1 -M64m -RTS
+
+	total time  =        0.38 secs   (377 ticks @ 1000 us, 1 processor)
+	total alloc = 332,715,184 bytes  (excludes profiling overheads)
+
+COST CENTRE                     MODULE  %time %alloc
+
+groupBy''.fillMap               Main     22.5   35.6
+lookupF                         Main     18.3    0.0
+preorder'.preos                 Main     17.8    0.6
+dfs.dfss'                       Main     13.0    8.2
+prepare.edges_t                 Main      6.9   31.5
+prepare.edges_d.\               Main      2.9    4.3
+readIntBs                       Main      2.4    3.4
+preorder'.preo.set'             Main      1.9    1.7
+flatmap                         Main      1.9    4.8
+groupBy''                       Main      1.6    0.0
+dfs.dfs'                        Main      1.1    0.9
+tuplify2                        Main      1.1    0.7
+preorder'.preo                  Main      1.1    1.0
+prepare.pre                     Main      0.5    2.0
+groupBy''.fillMap.add_or_update Main      0.5    2.4
+dfs.dfs'.set_t                  Main      0.3    1.7
+
+
+                                                                                  individual     inherited
+COST CENTRE                           MODULE                    no.     entries  %time %alloc   %time %alloc
+
+MAIN                                  MAIN                       49           0    0.0    0.0   100.0  100.0
+ main                                 Main                       99           0    0.3    0.3   100.0   99.8
+  prepare                             Main                      100           1    0.0    0.0    99.7   99.4
+   prepare.pre                        Main                      125           1    0.5    1.8    22.5    5.5
+    preorder'                         Main                      126           1    0.0    0.2    22.0    3.7
+     preorder'.preo                   Main                      127       10000    1.1    1.0    22.0    3.5
+      preorder'.preo.set''            Main                      136        9999    0.0    0.0     0.0    0.0
+      preorder'.preo.set'             Main                      131       10000    1.9    1.7     1.9    1.7
+      preorder'.preo.res              Main                      129       10000    0.3    0.1    19.1    0.9
+       preorder'.preos                Main                      130      210000   17.8    0.6    18.8    0.8
+        preorder'.preos.set''         Main                      137        9998    0.3    0.0     0.3    0.0
+        preorder'.preos.res           Main                      135        9999    0.0    0.1     0.0    0.1
+        preorder'.preos.set'          Main                      134        9999    0.0    0.0     0.0    0.0
+        preorder'.preos.res'          Main                      133        9999    0.5    0.1     0.5    0.1
+        preorder'.preos.ls'           Main                      132        9999    0.3    0.0     0.3    0.0
+      preorder'.preo.ls'              Main                      128       10000    0.0    0.0     0.0    0.0
+   dfs                                Main                      115           1    0.0    0.0    37.1   11.2
+    second                            Main                      118           1    0.0    0.0     0.0    0.0
+    dfs.dfs'                          Main                      117       10000    1.1    0.9    37.1   11.2
+     dfs.dfs'.low                     Main                      158        9999    0.0    0.0     0.0    0.0
+     dfs.dfs'.ze_low                  Main                      155        9999    0.0    0.0     0.3    0.1
+      minimum'                        Main                      156        9999    0.3    0.1     0.3    0.1
+     dfs.dfs'.lows                    Main                      150       10000    0.0    0.0     0.3    0.0
+      first                           Main                      151       10000    0.3    0.0     0.3    0.0
+     dfs.dfs'.set'                    Main                      145        9999    0.3    0.0     0.5    0.0
+      third                           Main                      146        9999    0.3    0.0     0.3    0.0
+     dfs.dfs'.set_t                   Main                      141       10000    0.3    1.7     0.3    1.7
+     dfs.dfs'.curr_id                 Main                      139       10000    0.0    0.0     0.0    0.0
+      lookupF                         Main                      140       10000    0.0    0.0     0.0    0.0
+     dfs.dfs'.res                     Main                      121       10000    0.8    0.1    33.7    8.3
+      dfs.dfss'                       Main                      122      210000   13.0    8.2    32.9    8.2
+       dfs.dfss'.lows'                Main                      153        9999    0.0    0.0     0.5    0.0
+        first                         Main                      154        9999    0.5    0.0     0.5    0.0
+       dfs.dfss'.cnt'                 Main                      147        9999    0.0    0.0     0.5    0.0
+        second                        Main                      148        9999    0.5    0.0     0.5    0.0
+       dfs.dfss'.res                  Main                      144        9999    0.0    0.1     0.0    0.1
+       dfs.dfss'.set'                 Main                      142        9999    0.0    0.0     0.0    0.0
+        third                         Main                      143        9999    0.0    0.0     0.0    0.0
+       dfs.dfss'.curr_id              Main                      123      200000    0.5    0.0    18.8    0.0
+        lookupF                       Main                      124      200000   18.3    0.0    18.3    0.0
+     dfs.dfs'.cnt                     Main                      119       10000    0.5    0.0     1.1    0.0
+      dfs.dfs'.cnt.predicate2         Main                      152       10000    0.0    0.0     0.0    0.0
+      dfs.dfs'.cnt.predicate1         Main                      149       10000    0.5    0.0     0.5    0.0
+      second                          Main                      120       10000    0.0    0.0     0.0    0.0
+   prepare.edges_d                    Main                      105           1    0.0    0.0     6.1    9.9
+    flatmap                           Main                      106      100001    1.9    4.8     6.1    9.9
+     prepare.edges_d.\                Main                      107      100000    2.9    4.3     4.2    5.0
+      prepare.edges_d.\.tup           Main                      108      100000    0.3    0.0     1.3    0.7
+       tuplify2                       Main                      109      100000    1.1    0.7     1.1    0.7
+   prepare.edges_t                    Main                      104           1    6.9   31.5     9.3   34.9
+    readIntBs                         Main                      112      200000    2.4    3.4     2.4    3.4
+   prepare.edges                      Main                      101           1    0.0    0.0    24.7   38.0
+    groupBy''                         Main                      103           0    1.6    0.0    24.7   38.0
+     groupBy''.fillMap                Main                      113      200000   22.5   35.6    23.1   38.0
+      groupBy''.fillMap.add_or_update Main                      114      200000    0.5    2.4     0.5    2.4
+ CAF                                  Main                       97           0    0.0    0.0     0.0    0.2
+  maxNodes                            Main                      157           1    0.0    0.0     0.0    0.0
+  groupBy''                           Main                      102           1    0.0    0.0     0.0    0.0
+  main                                Main                       98           1    0.0    0.0     0.0    0.2
+   prepare                            Main                      110           0    0.0    0.0     0.0    0.2
+    prepare.pre                       Main                      138           0    0.0    0.2     0.0    0.2
+    prepare.head                      Main                      116           1    0.0    0.0     0.0    0.0
+ CAF                                  GHC.IO.Handle.FD           89           0    0.0    0.0     0.0    0.0
+ CAF                                  GHC.IO.Handle.Internals    84           0    0.0    0.0     0.0    0.0
+ CAF                                  GHC.IO.Handle.Text         83           0    0.0    0.0     0.0    0.0
+ CAF                                  GHC.Conc.Signal            80           0    0.0    0.0     0.0    0.0
+ CAF                                  GHC.IO.Encoding            79           0    0.0    0.0     0.0    0.0
+ CAF                                  GHC.IO.Encoding.Iconv      63           0    0.0    0.0     0.0    0.0

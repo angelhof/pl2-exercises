@@ -1,0 +1,87 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english, greek]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\title{ \textbf{Γλώσσες Προγραμματισμού 2} \\ Άσκηση 2 - Συστήματα Τύπων}
+\author{Κωνσταντίνος Καλλάς 03112057}
+
+\begin{document}
+\maketitle
+
+\selectlanguage{greek}
+
+\section*{Εισαγωγή}
+
+Ο σκοπός αυτής της άσκησης είναι να ορίσουμε την σημασιολογία μεγάλων βημάτων για μια βασική γλώσσα που περιγράφεται στις διαφάνειες του μαθήματος. Εκτός από τον ορισμό της σημασιολογίας θα διατυπώσουμε και το θεώρημα ασφάλειας για τη γλώσσα καθώς και θα συγκρίνουμε τη σημασιολογία μεγάλων βημάτων με εκείνη των μικρών βημάτων. 
+
+\section*{Ορισμός Σημασιολογίας}
+
+Εδώ θα ορίσουμε τη σημασιολογία μεγάλων βημάτων για τη ζητούμενη γλώσσα. Πρώτα όμως θα ορίσουμε τους βασικούς κανόνες σύνταξης της γλώσσας για λόγους πληρότητας.
+
+\subsection*{Σύνταξη}
+
+\(v ::= n | true | false | \lambda x: \tau.e | loc_i\) \\
+\(e ::= n | -e | e_1 + e_2 ...\) \\
+\( \, ... \, \, | true | false | \neg e | e_1 \wedge e_2 ... \) \\
+\( \, ... \, \, | e_1 < e_2 | if \, e \, then \, e_1 \, else \, e_2 ... \) \\
+\( \, ... \, \, | x | \lambda x: \tau.e | e_1e_2 ... \) \\
+\( \, ... \, \, | ref \, e | ! e | e_1 := e_2 | loc_i ... \) \\
+\(\tau ::= Int | Bool | \tau_1 \rightarrow \tau_2 | Ref \; \tau \)
+
+\subsection*{Σημασιολογικοί κανόνες}
+Παρατίθενται οι κανόνες σημασιολογίας μεγάλων βημάτων. Να δωθεί προσοχή στο ότι ο κανόνας \(Store \; Reference \; Value\) δεν επιστρέφει \(unit\) όπως συμβαίνει στην σημασιολογία μικρών βημάτων, αφού το \(unit\) δεν περιλαμβάνεται στις διαφάνειες που δίνονται για \foreignlanguage{english}{reference}. Ο ίδιος κανόνας με επιστροφή την τιμή \(unit\) βρίσκεται ακριβώς κάτω από τον άλλον. Απλώς να σημειωθεί ότι για να ισχύει αυτός ο κανόνας απαιτείται επέκταση της σύνταξης της γλώσσας με την τιμή \(unit\). 
+ 
+\[\frac{(e_1, m) \Downarrow (v_1, m') \; \; (e_2, m') \Downarrow (v_2, m'') }{(e_1 \circ e_2, m) \Downarrow (v, m'') \; \; where \; \; v = v_1 \circ v_2 \;\;, where \; \circ \in \{ +, <, \wedge,... \} } : Binary \; Operations\]
+\[\frac{(e, m) \Downarrow (v, m') }{(\diamond e, m) \Downarrow (v', m') \; \; where \; \; v' = \diamond v \;\;, where \; \diamond \in \{ -, \neg ,... \}} : Unary \; Operations\]
+\[\frac{(e_1, m) \Downarrow (true, m') \; \; (e_2, m') \Downarrow (v_2, m'')}{(if \; e_1 \; then \; e_2 \; else \; e_3, m) \Downarrow (v_2, m'')} : If-True-Then-Else \; Operation\]
+\[\frac{(e_1, m) \Downarrow (false, m') \; \; (e_3, m') \Downarrow (v_3, m'')}{(if \; e_1 \; then \; e_2 \; else \; e_3, m) \Downarrow (v_3, m'')} : If-False-Then-Else \; Operation\]
+\[\frac{(e_1, m) \Downarrow (\lambda x.e, m') \; \; (e_2, m') \Downarrow (v_2, m'')}{(e_1 e_2 , m) \Downarrow (e[x := v_2], m'')} : Function \; Call \; (By \; Value)\]
+\[\frac{(e, m) \Downarrow (loc_i, m') \; \; m'(i) = v }{(!e, m) \Downarrow (v, m')} : Get \; Reference \; Value \]
+\[\frac{(e_1, m) \Downarrow (loc_i, m') \; \; (e_2, m) \Downarrow (v, m'') }{(e_1 := e_2, m) \Downarrow (v, m''\{i \mapsto v\})} : Store \; Reference \; Value \]
+\[\frac{(e_1, m) \Downarrow (loc_i, m') \; \; (e_2, m) \Downarrow (v, m'') }{(e_1 := e_2, m) \Downarrow (unit, m''\{i \mapsto v\})} : Store \; Reference \; Value \rightarrow Unit\]
+\[\frac{(e, m) \Downarrow (v, m') \; \; j = max(dom(m)) + 1 }{(ref \; e , m) \Downarrow (loc_j, m\{j \mapsto v\})} : Declare \; Reference \]
+
+\subsection*{Κανόνες τύπων}
+Αν και οι κανόνες τύπων ορίζονται και στις διαφάνεις του μαθήματος τους παραθέτουμε εδώ για λόγους πληρότητας. Οι κανόνες τύπων θα οριστούν στη μορφή \(\Gamma ; M \vdash e : \tau\) όπου \(\Gamma\) το περιβάλλον τύπων, \(M\) η μερική συνάρτηση που επιστρέφει τον τυπό της τιμής σε μια θέση μνήμης και \(e\) η έκφραση και \(\tau\) ο τύπος. \\
+Σημείωση: Όπως και παραπάνω στον κανόνα για το \(store\) θεωρούμε ότι δεν επιστρέφεται \(unit\), αφού δεν βρίσκεται στις διαφάνειες που μας δώθηκαν, αλλά επιστρέφεται η τιμή που αποθηκεύτηκε. Στην περίπτωση που το \(unit\) περιλαμβάνεται στη γλώσσα μας αρκεί μια μικρή μετατροπή του κανόνα ώστε ο τύπος επιστροφής να είναι τύπου \(unit\). 
+\[\Gamma ; M \vdash n : Int \; \; \; \; \Gamma ; M \vdash  true : Bool \; \; \; \; \Gamma ; M \vdash false : Bool\]
+\[\frac{\Gamma ; M \vdash e_1 : Int \; \; \Gamma ; M \vdash e_2 : Int}{\Gamma ; M \vdash e_1 + e_2 : Int} \; \; \; \; \frac{\Gamma ; M \vdash e_1 : Int \; \; \Gamma ; M \vdash e_2 : Int}{\Gamma ; M \vdash e_1 < e_2 : Bool}\]
+\[\frac{\Gamma ; M \vdash e : Int}{\Gamma ; M \vdash - e : Int} \; \; \; \; \frac{\Gamma ; M \vdash e_1 : Bool \; \; \Gamma ; M \vdash e_2 : Bool}{\Gamma ; M \vdash e_1 \wedge e_2 : Bool}\]
+\[\frac{\Gamma ; M \vdash e : Bool}{\Gamma ; M \vdash \neg e : Bool} \; \; \; \; \frac{\Gamma ; M \vdash e : Bool \; \; \Gamma ; M \vdash e_1 : \tau \; \; \Gamma ; M \vdash e_2 : \tau}{\Gamma ; M \vdash if \; e \; then e_1 \; else e_2 : \tau}\]
+\[\frac{(x, \tau) \in \Gamma}{\Gamma ; M \vdash x : \tau} \; \; \; \; \frac{\Gamma , x: \tau ; M \vdash e : \tau' }{\Gamma ; M \vdash \lambda x : \tau . e : \tau \rightarrow \tau'}\]
+\[\frac{\Gamma ; M \vdash e_1 : \tau \rightarrow \tau' \; \; \; \; \Gamma ; M \vdash e_2 : \tau}{\Gamma ; M \vdash  e_1 e_2 : \tau'}\]
+\[\frac{\Gamma ; M \vdash e : \tau}{\Gamma ; M \vdash ref \; e : Ref \; \tau} \; \; \; \; \frac{\Gamma ; M \vdash e : Ref \tau}{\Gamma ; M \vdash !e : \tau}\]
+\[\frac{\Gamma ; M \vdash e_1 : Ref \tau \; \; \; \; \Gamma ; M \vdash e_2 : \tau}{\Gamma ; M \vdash e_1 := e_2 : \tau}\]
+\[\frac{M(i) = \tau}{\Gamma ; M \vdash loc_i : Ref \; \tau}\]
+
+\section*{Θεώρημα Ασφάλειας} 
+Το Θεώρημα Ασφάλειας μπορεί να χωριστεί σε δύο τμήματα. Στην πρόοδο και διατήρηση.
+
+\subsection*{Πρόοδος}
+Αν \( \emptyset ; M \vdash e: \tau\) τότε είτε e είναι τιμή, είτε για κάθε \(m\) τέτοιο ώστε \( \emptyset \vdash m:M\) υπάρχει \((v, m')\), με \(v\) τιμή, ώστε \((e,m) \Downarrow (v, m')\)
+
+\subsection*{Διατήρηση}
+Αν \(\Gamma ; M \vdash e:\tau\), \(\Gamma \vdash m: M\) και \((e,m) \Downarrow (v, m')\) τότε υπάρχει κάποιο \(M'\) τέτοιο ώστε \( M \subseteq M' \) , \(\Gamma \vdash m' : M' \) και \(\Gamma ; M' \vdash v' : \tau\).
+
+
+\section*{Σύγκριση Σημασιολογίας Μικρών και Μεγάλων Βημάτων}
+Οι δυο σημασιολογίες έχουν κάποιες βασικές διαφορές που παρουσιάζουμε παρακάτω.
+\begin{itemize}
+\item Η σημασιολογία μικρών βημάτων είναι πιο λεπτομερής και περιγράφει πιο απλά χαρακτηριστικά της γλώσσας. Για αυτό μπορεί να χρησιμοποιηθεί για την μοντελοποίηση πιο δύσκολων συμμπεριφορών όπως τα \(runtime-errors\).
+\item Χρησιμοποιώντας την σημασιολογία μικρών βημάτων, συχνά οδηγούμαστε σε αχρείαστα βήματα.
+\item Η σημασιολογία μεγάλων βημάτων περιγράφει πιο μεγάλες διαδικασίες και ως εκ τούτου η χρήση της είναι πιο εύκολη και χωρίς πολλά άσκοπα βήματα.
+\item Επειδή στη σημασιολογία μεγάλων βημάτων παραλείπονται όλα τα ενδιάμεσα βήματα, δεν μπορεί να χρησιμοποιηθεί για να περιγράψει οποιαδήποτε κατάσταση προγράμματος που είναι "κολλημένη" σε ενδιάμεση κατάσταση.  
+\end{itemize}
+\end{document}

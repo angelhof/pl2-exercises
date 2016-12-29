@@ -7,6 +7,7 @@ import qualified Data.Map as Map
 import qualified Data.Set as Set
 import qualified Data.List as List
 import qualified Control.Arrow as Ar
+import Data.Maybe
 
 import Debug.Trace
 
@@ -31,18 +32,19 @@ execute ast input = execute' ast (Map.empty, input, "")
         where
           (V o1, input1, output1) = execute' expr1 state 
           (res, input2, output2) = execute' expr2 (env, input1, o1:output1)
-    execute' (In expr) state@(env, (ch:rest), output) = 
+    execute' (In expr) state@(env, ch:rest, output) = 
       result
         where
-          ((F (Fn var body) mapper), input1, output1) = execute' expr (env, rest, output)
+          (F (Fn var body) mapper, input1, output1) = execute' expr (env, rest, output)
           result = execute' body (env', input1, output1)
           env' = Map.insert var (V ch) mapper
     execute' (Var var) state@(env, input, output) = 
       (res, input, output)
         where
-          res = case Map.lookup var env of
-            Nothing  -> error $ " !!!!!! -- Variable: " ++ show var ++ " not found in: " ++ show env
-            Just val -> val
+          res = 
+            fromMaybe
+              (error "Variable not found!!")
+              (Map.lookup var env)
     execute' (Fn var body) state@(env, input, output) = 
       result
         where

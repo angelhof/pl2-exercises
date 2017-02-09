@@ -1,0 +1,263 @@
+/*
+ * Cascading style sheet for Chrysoberyl
+ * (c)2012-2014 Chris Pressey, Cat's Eye Technologies.  All rights reserved.
+ */
+
+/* --- META --- */
+@-ms-viewport{
+    width: extend-to-zoom;
+    zoom: 1.0;
+}
+
+/* --- ELEMENTS --- */
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  background-color: white;
+  background-image: url(../images/backgrounds/sinewhite.png);
+  color: black;
+  font-size: 100%;
+  margin: 0;
+  /* bootstrap adds padding on small devices, why? */
+  padding: 0;
+  height: 100%;
+}
+body a:link {
+  color: #128051;
+}
+body a:visited {
+  color: #1A5E41;
+}
+body a:active {
+  color: #00c490
+}
+
+#page_boundary {   /* for the keep-footer-to-bottom trick */
+   min-height: 100%;
+   position: relative;
+}
+
+header {
+  padding: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 2px;
+  background-color: black;
+  background-image: url(../images/backgrounds/sineblack.png);
+  color: #B1D9B1;
+  /* line-height is explicitly given, b/c some gewgaws set all their
+     parents' line-heights to 0, incl. body, and we don't want to inherit */
+  line-height: 20px;
+}
+header a:link {
+  color: #53a783;
+}
+header a:visited {
+  color: #ccb464;
+}
+header a:active {
+  color: #0cd490;
+}
+
+article {
+  margin: 1em;
+  padding-bottom: 3em;     /* height of the footer */
+}
+
+footer {
+  text-align: right;
+  margin: 0;
+
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 3em;             /* height of the footer */
+}
+footer p {
+  margin: 0;
+  margin-right: 0.5em;
+}
+
+blockquote {
+  border-left: 8px solid #888888;
+}
+blockquote p {
+  font-size: 100%;
+  font-style: italic;
+  text-align: left;
+}
+
+textarea {
+  font-family: "Lucida Console", Console, monospace;
+  /* bootstrap-responsive sets this to 206px. weird. */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+select {
+  margin-bottom: 0;
+  width: auto;  /* not 220px, thanks, bootstrap */
+}
+
+input[type="checkbox"] {
+  margin: 4px 2px 4px 0px;
+}
+
+label {
+  margin-right: 1em;
+}
+
+/* --- CLASSES --- */
+a.external {
+  white-space: nowrap;
+}
+a.external:before {
+  content: url(../images/icons/webicon.gif);
+  padding-right: 2px;
+  vertical-align: top
+}
+
+a.rss {
+  white-space: nowrap;
+}
+a.rss:before {
+  content: url(../images/icons/feedicon.gif);
+  padding-right: 2px;
+  vertical-align: top
+}
+
+a.button {
+  white-space: nowrap;
+  background: #a0a0a0;
+  border-left: 1px solid white;
+  border-top: 1px solid white;
+  border-right: 1px solid #303030;
+  border-bottom: 1px solid #303030;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+a.button:hover {
+  background: #c0c0c0;
+}
+a.button:link {
+  color: #0000ff;
+}
+a.button:visited {
+  color: #600000;
+}
+a.button:active {
+  color: #ffe0ff;
+}
+
+.sample pre {
+  overflow: auto;
+  word-break: normal;
+  word-wrap: normal;
+}
+.sample pre code {
+  white-space: pre;
+  word-break: normal;
+  word-wrap: normal;
+}
+.list_entry {
+  margin-top: 1.5em;
+}
+
+.download {
+  border: 1px solid blue;
+  padding: 2px;
+}
+
+.online {
+  border: 1px solid #260640;
+  padding: 2px;
+}
+
+.accompanying_images {
+  text-align: center;
+}
+
+.clear {
+  clear: both;
+}
+
+/* --- SOMEWHAT MORE SPECIFIC CLASSES --- */
+
+div.article_description {
+  padding-left: 1em;
+}
+
+th.byline {
+  text-align: center;
+}
+
+/* in the Online Installations page, mainly... section spacing. */
+.nav {
+  /* override bootstrap's excessive 20px bottom margin */
+  margin-bottom: 0px;
+}
+
+.tabbed_container {
+  background: white;
+  border: 1px solid #dddddd;
+  border-top: none;
+}
+
+section.outer {
+  margin-left: 0.5em;
+}
+
+section.outer h2 {
+  margin-top: 0.25em;
+}
+
+/* --- IDS --- */
+#byline {
+  font-style: italic;
+  margin-top: 0;
+}
+
+#links ul {
+  list-style: none;
+  margin-left: 0.5em;
+}
+
+#images {
+  text-align: center;
+}
+
+#images img {
+  margin-bottom: 1em;
+}
+
+#images p {
+  font-size: 80%;
+  font-style: italic;
+}
+
+#about_panel { /* see note for header, above */
+  line-height: 20px;
+}
+
+/* --- END the actual theme CSS --- */
+
+/* RESPONSIVE LAYOUT */
+
+/* CGA */
+@media (min-width: 320px) and (min-height: 200px) {
+}
+
+/* VGA (rotated) */
+@media (min-width: 600px) /* and (min-height: 800px) */ {
+}
+
+/* VESA (rotated) */
+@media (min-width: 768px) /* and (min-height: 1024px) */ {
+}

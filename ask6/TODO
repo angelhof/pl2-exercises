@@ -1,0 +1,9 @@
+1. Check whether its better to have a variable length stach and if not what should the length be
+2. Check whether the stack should have unsigned longs or ints
+3. Implement the transform_opcodes and the retransform opcodes functions
+4. Check what should happen in case of division or modulo by 0
+5. Make sure that c ! always returns 1 or 0
+6. Make sure that c > always returns 1 or 0 
+7. General efficiency
+8. Check whether . prints a space after the int
+9. Check how bigger than ascii numbers should be handled in , and p

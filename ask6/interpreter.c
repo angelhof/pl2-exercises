@@ -72,8 +72,6 @@ char * line = NULL;
 /**
  * Define the Stack in a static way 
  * Source: https://groups.csail.mit.edu/graphics/classes/6.837/F04/cpp_notes/stack1.html
- * TODO: Check whether its better to have a variable length stack
- * TODO: Check whether stack should have unsigned long or int
  */
 #define STACK_MAX 1000
 struct Stack {
@@ -358,7 +356,6 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '"':
-    			// TODO: Implement
     			string_mode = 1;
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;

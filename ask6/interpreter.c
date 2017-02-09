@@ -250,7 +250,8 @@ next_instruction:
     	op = getOperation(pc);
 
 #ifdef DEBUG    
-    	printf("%c\n", op);
+    	printf("Stack: %d\n", Stack_Top(&stack));
+        printf("%c ", op);
 #endif    	
     	
     	// Check whether the execution is in string mode

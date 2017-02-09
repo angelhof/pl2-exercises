@@ -1,0 +1,39 @@
+body,td,th {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: x-large;
+        color: #CCCCCC;
+}
+
+body {
+        background-color: #333399;
+}
+
+.title {
+        font-family: "Courier New", Courier, monospace;
+        font-weight: bold;
+        font-size: 48px;
+        color: #00FF66;
+}
+
+.question {color: #FFCC33}
+.number {color: #CCFF33}
+.correct {color: #99ee99}
+.wrong {color: #ee77aa}
+
+.congratulations {
+        color: #FFCC33;
+        font-weight: bold;
+}
+
+a:link {
+        color: #CCFFFF;
+}
+
+a:visited {
+        color: #CCFFFF;
+}
+
+input {
+        background-color: #eeee66;
+        color: #333399;
+}

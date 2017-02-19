@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 
-from sys import exit
-from os import mkdir, unlink
-from os.path import isdir, isfile
-from subprocess import call, Popen, PIPE
+
 from lxml import etree, html
 import requests
+import sys
 
 def die (msg):
     print "Error:", msg
@@ -14,7 +12,6 @@ def die (msg):
 
 def solve(number):
 
-    # TODO: Branch solution so that it is less than 80 lines
     binary = str(bin(number))[2:]
     
     reversed_binary = binary[::-1]
@@ -31,12 +28,28 @@ def solve(number):
     cnt = len(filter(lambda x: x == '1', reversed_binary))
 
     result += "$" + cnt * "+" + ".@"
+
+    # Wrap the program
+    # Hack: Wraps programs that are maximum two lines long
+    if(len(result) > 78):
+        #print len(result)
+        first = result[:len(result)/2]
+        second = result[len(result)/2:]
+        if len(second) > len(first):
+            first = first + " "
+        first += "v\r\n"
+        second += ">"
+        result = first + second
     return result
 
 def main():
 
+    if(len(sys.argv) != 2):
+        die('Wrong arguments')
+
     # Global Constants
     url = "http://courses.softlab.ntua.gr/pl2/2016b/exercises/funge.php"
+    url = sys.argv[1]
     html_file = "temp_resources/temp.html"
 
     # Initialize Session
@@ -46,6 +59,9 @@ def main():
     # Get request
     r = session.get(url)
     cookies = requests.utils.cookiejar_from_dict(requests.utils.dict_from_cookiejar(session.cookies))
+
+    # Counter
+    right_counter = 0
 
     for i in xrange(1,11):
 
@@ -63,15 +79,25 @@ def main():
         # Send the POST request
         data = {'submit':'Submit!', 'program':result}
         r = session.post(url, headers=headers, data=data, cookies=cookies)
+        # Debug
         #print r.text
+        #print html.fromstring(r.text).xpath('//span[@class="question"]')[0].text
     
         root = html.fromstring(r.text)
-        entry = root.xpath('//p[@class="right"]')[0]
+        
+        right_span = root.xpath('//p[@class="right"]')
+        if(len(right_span) > 0):
+            entry = right_span[0]
+            right_counter += 1
+        else:
+            entry = root.xpath('//p[@class="wrong"]')[0]
         print entry.text
 
-        data = {'again':'Play again!', 'reset':'reset'}
+        data = {'again':'Play again!'}
         r = session.post(url, headers=headers, data=data, cookies=cookies)
         #print r.text
 
+    print "You got " + str(right_counter) + " out of 10 right!!"
+
 main()
-#print solve(432475369)
+#print solve(523529267)

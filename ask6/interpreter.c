@@ -170,40 +170,51 @@ int check_arguments_and_parse_program(int argc, char *argv[]){
     ssize_t read;
     size_t line_cnt = 0;
 
-	if(argc != 2){
+	if(argc != 2 && argc != 3){
 		printf("-- Interpreter Error! Wrong Argument Number\n");
-		printf("-- Usage: ./interpreter <program_name>\n");
+		printf("-- Usage: ./interpreter <program_name> [-stdin]\n");
 		error_exit(1);
 	}
 
-	program_file = fopen(argv[1], "r");
-	if(!program_file){
-		printf("-- Interpreter Error! File: \"%s\" doesn't exist\n", argv[1]);
-		error_exit(1);
-	}
-	
-    while ((read = getline(&line, &len, program_file)) != -1) {
-        if(line_cnt >= PROG_HEIGHT){
-			printf("-- Interpreter Error! Program contains more than %d lines\n", PROG_HEIGHT);
-        	error_exit(1);
-		}
-
-        if(read > PROG_WIDTH + 1){
-        	printf("-- Interpreter Error! Line: %lu is longer than %d characters\n", line_cnt+1, PROG_WIDTH);
-        	error_exit(1);
-        }
-		strncpy(program[line_cnt++], line, PROG_WIDTH);
-		
-
+    /**
+     * STDIN input used from the api
+     */
+    if(argc == 3){
+        program_file = stdin;
     }
+    else{
+    	program_file = fopen(argv[1], "r");
+     
+        if(!program_file){
+    		printf("-- Interpreter Error! File: \"%s\" doesn't exist\n", argv[1]);
+    		error_exit(1);
+    	}
+    }	
+        while ((read = getline(&line, &len, program_file)) != -1) {
+            if(line_cnt >= PROG_HEIGHT){
+    			printf("-- Interpreter Error! Program contains more than %d lines\n", PROG_HEIGHT);
+            	error_exit(1);
+    		}
+
+            if(read > PROG_WIDTH + 1){
+            	printf("-- Interpreter Error! Line: %lu is longer than %d characters\n", line_cnt+1, PROG_WIDTH);
+            	error_exit(1);
+            }
+    		strncpy(program[line_cnt++], line, PROG_WIDTH);
+    		
+
+        }
+    if(argc == 2){
+        fclose(program_file);
+    }
+    
+    if (line)
+        free(line);
 
 #ifdef DEBUG    
     print_program();
 #endif
 
-    fclose(program_file);
-    if (line)
-        free(line);
 	return 0;
 }
 
@@ -466,8 +477,18 @@ next_instruction:
     		case ' ':
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
+            // The next three have been added for the api
+            case '\r':
+                move_pc(&pc, dir);
+                NEXT_INSTRUCTION;
+            case '\n':
+                move_pc(&pc, dir);
+                NEXT_INSTRUCTION; 
+            case 0:
+                move_pc(&pc, dir);
+                NEXT_INSTRUCTION;       
     		default:
-    			printf("Error: Unknown Command: %c at (%d, %d) \n", op, pc.column, pc.row);
+    			printf("Error: Unknown Command: %d at (%d, %d) \n", op, pc.column, pc.row);
     			exit(1);
     	}
     }

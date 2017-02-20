@@ -8,6 +8,12 @@
 #define NEXT_INSTRUCTION goto next_instruction
 
 
+/**
+ * TODO:
+ * 1. Function that makes the p_data matrix from the program matrix
+ * 2. Array that maps ascii codes to labels
+ */
+
 
 // Direction 
 enum direction { right
@@ -25,6 +31,7 @@ typedef struct ProgramCounter PC;
 
 // The program size is 25 rows * 80 columns
 static char program[PROG_HEIGHT][PROG_WIDTH];
+static char p_data[PROG_HEIGHT][PROG_WIDTH];
 FILE *program_file;
 char * line = NULL;
 
@@ -188,6 +195,138 @@ char getOperation(PC pc){
  * Main Interpreter loop
  */
 void loop(){
+    // Initialize the label table
+    static void *label_tab[] = {
+        &&null_label,       // 0 - NULL
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&newline_label,    // 10 - Line feed
+        &&error_label,
+        &&error_label,
+        &&cr_label,         // 13 - Carriage Return    
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,      // 20
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,      // 30
+        &&error_label,      // 31 - Last Ascii control character
+        &&space_label,      // 32 - Space
+        &&not_label,        // 33 - !
+        &&string_label,     // 34 - "
+        &&jump_label,       // 35 - #
+        &&pop_label,        // 36 - $
+        &&modulo_label,     // 37 - %
+        &&read_int_label,   // 38 - &
+        &&error_label,      // 39 - '
+        &&error_label,      // 40 - (
+        &&error_label,      // 41 - )
+        &&multiply_label,   // 42 - *
+        &&add_label,        // 43 - +
+        &&print_char_label, // 44 - ,
+        &&subtract_label,   // 45 - -
+        &&print_int_label,  // 46 - .
+        &&divide_label,     // 47 - /
+        &&zero_label,       // 48 - 0
+        &&one_label,
+        &&two_label,
+        &&three_label,
+        &&four_label,
+        &&five_label,
+        &&six_label,
+        &&seven_label,
+        &&eight_label,
+        &&nine_label,       // 57 - 9
+        &&duplicate_label,  // 58 - :
+        &&error_label,      // 59 - ;
+        &&left_label,       // 60 - <
+        &&error_label,      // 61 - =
+        &&right_label,      // 62 - >
+        &&random_label,     // 63 - ?
+        &&exit_label,       // 64 - @
+        &&error_label,      // 65 - A
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,      // 90 - Z
+        &&error_label,      // 91 - [
+        &&invert_label,     // 92 - '\'  
+        &&error_label,      // 93 - ]
+        &&up_label,         // 94 - ^
+        &&horz_if_label,    // 95 - _
+        &&greater_label,    // 96 - `
+        &&error_label,      // 97 - a
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&get_label,        // 103 - g
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&put_label,        // 112 - p
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&down_label,       // 118 - v
+        &&error_label,
+        &&error_label,
+        &&error_label,
+        &&error_label,      // 122 - z
+        &&error_label,      // 123 - {
+        &&vert_if_label,    // 124 - |
+        &&error_label,      // 125 - }
+        &&read_char_label,  // 126 - ~
+        &&error_label,      // 127 - DEL
+    };
+
 
 	// Program Counter is made up from two parts pc row and pc column
 	PC pc; 
@@ -241,6 +380,7 @@ next_instruction:
 
     	switch (op) {
     		case '+':
+            add_label:
     			a = Stack_Pop(&stack);
     			b = Stack_Pop(&stack);
     			c = a + b;
@@ -248,6 +388,7 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '-':
+            subtract_label:
     			a = Stack_Pop(&stack);
     			b = Stack_Pop(&stack);
     			c = b - a;
@@ -255,6 +396,7 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '*':
+            multiply_label:
     			a = Stack_Pop(&stack);
     			b = Stack_Pop(&stack);
     			c = b * a;
@@ -262,6 +404,7 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '/':
+            divide_label:
     			// TODO: Fix the division by zero
     			a = Stack_Pop(&stack);
     			b = Stack_Pop(&stack);
@@ -270,6 +413,7 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '%':
+            modulo_label:
     			// TODO: Fix the division by zero
     			a = Stack_Pop(&stack);
     			b = Stack_Pop(&stack);
@@ -278,6 +422,7 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '!':
+            not_label:
     			// TODO: Make sure that ! returns 0 or 1 always
     			a = Stack_Pop(&stack);
     			b = !a;
@@ -285,6 +430,7 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '`':
+            greater_label:
     			// TODO: Make sure that ` returns 0 or 1 always
     			a = Stack_Pop(&stack);
     			b = Stack_Pop(&stack);
@@ -293,26 +439,32 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '>':
+            right_label:
     			dir = right;
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '<':
+            left_label:
     			dir = left;
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '^':
+            up_label:
     			dir = up;
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case 'v':
+            down_label:
     			dir = down;
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '?':
+            random_label:
     			dir = rand() % 4;
     			move_pc(&pc, dir); 
     			NEXT_INSTRUCTION;
     		case '_':
+            horz_if_label:
     			a = Stack_Pop(&stack);
     			if(a)
     				dir = left;
@@ -321,6 +473,7 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '|':
+            vert_if_label:
     			a = Stack_Pop(&stack);
     			if(a)
     				dir = up;
@@ -329,10 +482,12 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '"':
+            string_label:
     			string_mode = 1;
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case ':':
+            duplicate_label:
     			// TODO: Consider making this more efficient 
     			a = Stack_Pop(&stack);
     			Stack_Push(&stack, a);
@@ -340,6 +495,7 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '\\':
+            invert_label:
     			a = Stack_Pop(&stack);
     			b = Stack_Pop(&stack);
     			Stack_Push(&stack, a);
@@ -347,26 +503,31 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '$':
+            pop_label:
     			Stack_Pop(&stack);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '.':
+            print_int_label:
     			// TODO: Check whether . prints a space after the int
     			a = Stack_Pop(&stack);
     			printf("%d ", a);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case ',':
+            print_char_label:
     			// TODO: Check how numbers around the area are handled
     			a = Stack_Pop(&stack);
     			printf("%c", a);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '#':
+            jump_label:
     			move_pc(&pc, dir);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case 'g':
+            get_label:
     			// TODO: Ensure if g shouldnt check boundaries
     			a = Stack_Pop(&stack); // y value should be less than 25
     			b = Stack_Pop(&stack); // x value should be less than 80
@@ -375,6 +536,7 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case 'p':
+            put_label:
     			// TODO: Ensure if p shouldnt check boundaries
     			a = Stack_Pop(&stack); // y value should be less than 25
     			b = Stack_Pop(&stack); // x value should be less than 80
@@ -384,71 +546,89 @@ next_instruction:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '&':
+            read_int_label:
     			scanf("%d", &a);
     			Stack_Push(&stack, a);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '~':
+            read_char_label:
     			scanf("%c", &d);
     			Stack_Push(&stack, (int) d);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '0':
+            zero_label:
     			Stack_Push(&stack, 0);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '1':
+            one_label:
     			Stack_Push(&stack, 1);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '2':
+            two_label:
     			Stack_Push(&stack, 2);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '3':
+            three_label:
     			Stack_Push(&stack, 3);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '4':
+            four_label:
     			Stack_Push(&stack, 4);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '5':
+            five_label:
     			Stack_Push(&stack, 5);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '6':
+            six_label:
     			Stack_Push(&stack, 6);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '7':
+            seven_label:
     			Stack_Push(&stack, 7);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '8':
+            eight_label:
     			Stack_Push(&stack, 8);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '9':
+            nine_label:
     			Stack_Push(&stack, 9);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '@':
+            exit_label:
     			exit(0);
     		case ' ':
+            space_label:
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
             // The next three have been added for the api
             case '\r':
+            cr_label:
                 move_pc(&pc, dir);
                 NEXT_INSTRUCTION;
             case '\n':
+            newline_label:
                 move_pc(&pc, dir);
                 NEXT_INSTRUCTION; 
             case 0:
+            null_label:
                 move_pc(&pc, dir);
                 NEXT_INSTRUCTION;       
     		default:
+            error_label:
     			printf("Error: Unknown Command: %d at (%d, %d) \n", op, pc.column, pc.row);
     			exit(1);
     	}
@@ -457,8 +637,11 @@ next_instruction:
 }
 
 
+
+
+
 int main(int argc, char *argv[]){
-	check_arguments_and_parse_program(argc, argv);	
+    check_arguments_and_parse_program(argc, argv);	
 	loop();
 	return 0;
 } 

@@ -5,15 +5,9 @@
 
 #define PROG_WIDTH  80
 #define PROG_HEIGHT 25
-#define NEXT_INSTRUCTION goto next_instruction
+//#define NEXT_INSTRUCTION goto next_instruction
 
-
-/**
- * TODO:
- * 1. Function that makes the p_data matrix from the program matrix
- * 2. Array that maps ascii codes to labels
- */
-
+#define NEXT_INSTRUCTION goto *(void *)(p_labels[pc.row][pc.column])
 
 // Direction 
 enum direction { right
@@ -31,7 +25,7 @@ typedef struct ProgramCounter PC;
 
 // The program size is 25 rows * 80 columns
 static char program[PROG_HEIGHT][PROG_WIDTH];
-static char p_data[PROG_HEIGHT][PROG_WIDTH];
+static void *p_labels[PROG_HEIGHT][PROG_WIDTH];
 FILE *program_file;
 char * line = NULL;
 
@@ -190,6 +184,15 @@ char getOperation(PC pc){
 	return program[pc.row][pc.column];
 }
 
+void create_program_labels(void *label_tab[]){
+    int i,j;
+    for(i=0;i<PROG_HEIGHT;i++){
+        for(j=0;j<PROG_WIDTH;j++){
+            p_labels[i][j] = label_tab[(int)program[i][j]];
+        }
+    }
+}
+
 
 /**
  * Main Interpreter loop
@@ -327,6 +330,7 @@ void loop(){
         &&error_label,      // 127 - DEL
     };
 
+    create_program_labels(label_tab);
 
 	// Program Counter is made up from two parts pc row and pc column
 	PC pc; 
@@ -362,9 +366,11 @@ next_instruction:
 
 #ifdef DEBUG    
     	printf("Stack: %d\n", Stack_Top(&stack));
-        printf("%c ", op);
+        printf("Stack size: %d\n", stack.size);
+        printf("Current char: '%c'\n", op);
+        getchar();
 #endif    	
-    	
+        
     	// Check whether the execution is in string mode
     	if(string_mode == 1){
     		if(op == '"'){
@@ -375,7 +381,8 @@ next_instruction:
 	    		Stack_Push(&stack, a);
 	    	}	
 	    	move_pc(&pc, dir);
-    		NEXT_INSTRUCTION;
+    		//NEXT_INSTRUCTION;
+            goto next_instruction;
     	}
 
     	switch (op) {
@@ -485,7 +492,8 @@ next_instruction:
             string_label:
     			string_mode = 1;
     			move_pc(&pc, dir);
-    			NEXT_INSTRUCTION;
+    			//NEXT_INSTRUCTION;
+                goto next_instruction;
     		case ':':
             duplicate_label:
     			// TODO: Consider making this more efficient 
@@ -532,6 +540,8 @@ next_instruction:
     			a = Stack_Pop(&stack); // y value should be less than 25
     			b = Stack_Pop(&stack); // x value should be less than 80
     			c = (int) program[a][b];
+                //printf("Char at: %c\n", program[a][b]);
+                //printf("a: %d, b: %d, c: %d\n", a,b,c);
     			Stack_Push(&stack, c);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
@@ -541,8 +551,15 @@ next_instruction:
     			a = Stack_Pop(&stack); // y value should be less than 25
     			b = Stack_Pop(&stack); // x value should be less than 80
     			c = Stack_Pop(&stack); // value to be put
-    			program[a][b] = (char) c;
-    			Stack_Push(&stack, c);
+    			//printf("Previous char at: %c\n", program[a][b]);
+                //printf("a: %d, b: %d, c: %d\n", a,b,c);
+                program[a][b] = (char) c;
+                if(c >= 0 && c <128){
+                    p_labels[a][b] = label_tab[c];
+                }
+                else{
+                    p_labels[a][b] = &&error_label;   
+                }
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '&':

@@ -62,6 +62,7 @@ void Stack_Push(Stack *S, int d)
         S->data[S->size++] = d;
     else
         fprintf(stderr, "Error: stack full\n");
+        //exit(1);
 }
 
 int Stack_Pop(Stack *S)
@@ -222,9 +223,11 @@ next_instruction:
     	op = getOperation(pc);
 
 #ifdef DEBUG    
-    	printf("Stack: %d\n", Stack_Top(&stack));
-        printf("%c ", op);
-#endif    	
+        printf("Stack: %d\n", Stack_Top(&stack));
+        printf("Stack size: %d\n", stack.size);
+        printf("Current char: '%c'\n", op);
+        getchar();
+#endif  
     	
     	// Check whether the execution is in string mode
     	if(string_mode == 1){
@@ -380,7 +383,6 @@ next_instruction:
     			b = Stack_Pop(&stack); // x value should be less than 80
     			c = Stack_Pop(&stack); // value to be put
     			program[a][b] = (char) c;
-    			Stack_Push(&stack, c);
     			move_pc(&pc, dir);
     			NEXT_INSTRUCTION;
     		case '&':

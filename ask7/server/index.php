@@ -16,7 +16,6 @@ function generate() {
 
 function evaluate_program($program) {
  
-  // TODO: Make the API
   $api_url = "http://courses.softlab.ntua.gr/pl2/2016b/exercises/befunge93-api/?restrict";
   $api_url = "http://localhost:5000/befunge-api/?restrict";
   $data = trim($program, "\r\n") . "\r\n";
@@ -173,7 +172,7 @@ unset($_SESSION['generate']);
       }
       else {
         
-        if (isset($_POST['reset'])) {
+        if (isset($_POST['reset']) && !isset($_POST['again'])) {
           printf("<span class=\"wrong\">You are a coward :'( Changing 
                     the number won't help you to beat the game</span>
                      <br> \n");

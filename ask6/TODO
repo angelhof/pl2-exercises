@@ -1,4 +1,4 @@
-1. Check whether its better to have a variable length stach and if not what should the length be
+1. Check whether its better to have a variable length stack and if not what should the length be
 2. Check whether the stack should have unsigned longs or ints
 3. Implement the transform_opcodes and the retransform opcodes functions
 4. Check what should happen in case of division or modulo by 0

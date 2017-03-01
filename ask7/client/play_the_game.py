@@ -93,7 +93,7 @@ def main():
             entry = root.xpath('//p[@class="wrong"]')[0]
         print entry.text
 
-        data = {'again':'Play again!'}
+        data = {'again':'Play again!', 'reset':'Reset'}
         r = session.post(url, headers=headers, data=data, cookies=cookies)
         #print r.text
 

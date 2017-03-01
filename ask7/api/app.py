@@ -1,6 +1,7 @@
 #!flask/bin/python
 from flask import Flask, request
 from subprocess import call, Popen, PIPE
+import sys
 import threading
 
 ## From stackoverflow question: 
@@ -35,7 +36,12 @@ class Command(object):
         return ("ok", self.output, self.return_code)
 
 # Global Constants
-befunge_interpreter = "/home/konstantinos/Desktop/University/9th_Semester/pl2/ask6/interpreter"
+if(not len(sys.argv) == 2):
+    print 'Wrong number of arguments'
+    print 'Correct Usage: ./app.py <befunge interpreter path>'
+    exit(1)
+else:
+    befunge_interpreter = sys.argv[1]
 
 disallowed_chars = [str(x) for x in xrange(10)] + \
                    [ '?'

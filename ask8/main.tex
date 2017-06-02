@@ -1,0 +1,165 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english, greek]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\usepackage{listings}
+\lstnewenvironment{code}[1][]%
+  {\noindent\minipage{\linewidth}\medskip 
+   \lstset{basicstyle=\ttfamily\footnotesize,frame=single,#1}}
+  {\endminipage}
+\title{ \textbf{Γλώσσες Προγραμματισμού 2} \\ Άσκηση 8 - Διαχείριση Μνήμης}
+\author{Κωνσταντίνος Καλλάς 03112057}
+
+\begin{document}
+\maketitle
+\lstset{language=C}
+\selectlanguage{greek}
+
+\section*{Ερώτηση 1η}
+Ένας συμφοιτητής σας έχει σχεδιάσει μια νέα τεχνική συλλογής σκουπιδιών την οποία ονομάζει
+\foreignlanguage{english}{“RefCount++”} και η οποία επεκτείνει την τεχνική ανακύκλωσης μνήμης μέσω μετρήματος αναφορών με την επιπλέον δυνατότητα ανίχνευσης και συλλογής μη προσβάσιμων (\foreignlanguage{english}{unreachable}) κυκλικών δομών δεδομένων. Είναι πολύ περήφανος για τη συγκεκριμένη τεχνική και ισχυρίζεται ότι
+στα προγράμματα στα οποία η διαχείριση μνήμης γίνεται με \foreignlanguage{english}{“RefCount++”} δεν υπάρχουν \foreignlanguage{english}{memory leaks}. Συμφωνείτε μαζί του ή όχι; Αιτιολογήστε την απάντησή σας.
+\subsection*{Απάντηση}
+Ας δούμε αρχικά σε ποιές περιπτώσεις είναι χρήσιμη η μέθοδος \foreignlanguage{english}{reference counting}. Είναι μια μέθοδος συλλογής σκουπιδιών που χρησιμοποιείται κυρίως σε συστήματα με λίγη μνήμη ή σε \foreignlanguage{english}{real time} εφαρμογές που δεν μπορούν να σταματήσουν την εκτέλεση για μεγάλα χρονικά διαστήματα συλλογής σκουπιδιών. \\\\
+Το πρόβλημα που ο συμφοιτητής μας προσπάθησε να λύσει σχεδιάζοντας την \foreignlanguage{english}{“RefCount++”} είναι η δυνατότητα συλλογής μη προσβάσιμων κυκλικών δομών δεδομένων οι οποίες δεν ανιχνεύονται από την απλή μέθοδο \foreignlanguage{english}{reference counting}. Η ανίχνευση κυκλικών δομών δεδομένων όμως απαιτεί τη χρήση κάποιας \foreignlanguage{english}{disruptive} μεθόδου συλλογής σκουπιδιών (\foreignlanguage{english}{Mark and Sweep, Copying GC}). Η χρήση τέτοιων μεθόδων όμως καταρρίπτει σε κάποιο βαθμό τα θετικά της μεθόδου \foreignlanguage{english}{reference counting}. \\\\
+Καταλήγοντας η μέθοδος του συμφοιτητή μας πιθανότατα καταφέρνει να συλλέξει μη προσβάσιμες κυκλικές δομές, αλλά δεν μπορεί να θεωρηθεί πως έχει τα πλεονεκτήματα της μεθόδου \foreignlanguage{english}{reference counting}.
+
+\section*{Ερώτηση 2η}
+Ένας άλλος συμφοιτητής σας θέλει να μειώσει το κόστος της αυτόματης διαχείρισης μνήμης κατά
+το χρόνο εκτέλεσης με το συνδυασμό στατικών και δυναμικών τεχνικών ανακύκλωσης μνήμης.
+Πιο συγκεκριμένα, θέλει ο \foreignlanguage{english}{compiler} του να εισάγει αυτόματα όσες περισσότερες κλήσεις στη συνάρτηση \foreignlanguage{english}{free} μπορεί κατά τη μεταγλώττιση του προγράμματος και να διαχειρίζεται τα υπόλοιπα
+δεδομένα μέσω κλήσεων κατά το χρόνο εκτέλεσης της συνάρτησης που υλοποιεί το συλλέκτη
+σκουπιδιών. Θεωρεί ότι ο παραπάνω συνδυασμός μπορεί να βασιστεί πλήρως πάνω στη ανάλυση
+της “ζωντάνιας” των μεταβλητών (\foreignlanguage{english}{liveness analysis}) που έτσι και αλλιώς κάνει ο μεταγλωττιστής.
+Πιο συγκεκριμένα, προτείνει ο μεταγλωττιστής να εισάγει μια κλήση της μορφής \foreignlanguage{english}{free(v)} στο
+σημείο του προγράμματος στο οποίο μια μεταβλητή \foreignlanguage{english}{v} παύει να είναι ζωντανή. Είναι σωστή η στρατηγική του συμφοιτητή σας; Εξηγήστε το σκεπτικό της απάντησής σας.
+
+\subsection*{Απάντηση}
+Υπάρχει ένα πρόβλημα στη συλλογιστική του συμφοιτητή μας που μπορεί να φανεί καθαρά από ένα παράδειγμα.
+
+\begin{otherlanguage}{english}
+\begin{code}[frame=single]  
+/**
+ * Initial code
+ */
+int *a = malloc(sizeof(int));
+int *b = a;
+
+/* a is never used after this point */
+do_something(b);
+\end{code}
+
+\begin{code}[frame=single]  
+/**
+ * Transformed code
+ */
+int *a = malloc(sizeof(int));
+int *b = a;
+
+/* a is never used after this point */
+free(a);
+do_something(b);
+
+\end{code}
+\end{otherlanguage}
+\\
+Φαίνεται λοιπόν ότι \textbf{μόνο} με τη χρήση \foreignlanguage{english}{liveness analysis} δεν είναι εφικτό να βρεθούν τέτοιου είδους προβλήματα. 
+
+\section*{Ερώτηση 3η}
+ Ένας άλλος συμφοιτητής σας ο οποίος είναι μεγάλος οπαδός της \foreignlanguage{english}{C++} ισχυρίζεται ότι μπορεί κάποιος να αποφύγει τα \foreignlanguage{english}{memory leaks} στη \foreignlanguage{english}{C++} με το να δεσμεύει όλα τα αντικείμενα στη στοίβα.
+Επιπλέον σας λέει ότι αυτό είναι κάτι το οποίο δε μπορεί κάποιος να κάνει στη \foreignlanguage{english}{Java}. Για το σκοπό
+αυτό λοιπόν προτείνει τα προγράμματα \foreignlanguage{english}{Java} να μετασχηματίζονται αυτόματα σε προγράμματα
+\foreignlanguage{english}{C++} τα οποία χρησιμοποιούν δέσμευση μνήμης στη στοίβα. Πιο συγκεκριμένα, ο μετασχηματισμός του προτείνει ότι ένα \foreignlanguage{english}{Java statement} της μορφής
+\foreignlanguage{english}{Foo f = new Foo()} 
+θα μετατρέπεται στον
+\foreignlanguage{english}{C++} κώδικα
+\foreignlanguage{english}{Foo \_f; Foo* f = \&\_f}
+ο οποίος κάνει το
+\foreignlanguage{english}{f}
+να δείχνει σε ένα
+\foreignlanguage{english}{Foo}
+αντικείμενο το
+οποίο είναι δεσμευμένο στη στοίβα αντί στο σωρό.
+Είναι σωστός ο μετασχηματισμός αυτός; Εξηγήστε το σκεπτικό της απάντησής σας.
+
+\subsection*{Απάντηση}
+Μπορούμε πάλι να δούμε καθαρά το πρόβλημα του παραπάνω σκεπτικού με ένα απλό παράδειγμα.
+\begin{otherlanguage}{english}
+\begin{code}[frame=single]  
+int* allocate_int(int val){
+    int* a = malloc(sizeof(int));
+    a* = val;
+    return a;
+}
+
+int main(){
+    int* a,b;
+    
+    a = allocate_int(5);
+    
+    /** 
+     * The stack frame of allocate_int has now been 
+     * popped from the stack thus a now points to corrupt 
+     * memory(trash).
+     */
+    
+    b = allocate_int(4);
+    printf("a: %d\n", a*); // Problem
+    
+    return 0;
+}
+
+\end{code}
+\end{otherlanguage}
+\\
+Αν εκτελέσουμε τον παραπάνω κώδικα θα παρατηρήσουμε ότι τυπώνει σκουπίδια πολύ απλά επειδή η επιστροφή από συναρτήσεις οδηγεί και στην αφαίρεση του πλαισίου τους από τη στοίβα. 
+
+\section*{Ερώτηση 4η}
+Αντίθετα με το παραπάνω, κάποιες υλοποιήσεις γλωσσών δε χρησιμοποιούν καθόλου στοίβα αλλά
+δεσμέυουν τα πάντα στο σωρό. Συνήθως, σε κάποια τέτοια υλοποίηση, η “στοίβα” δεν είναι τίποτε άλλο από μια απλά συνδεδεμένη λίστα από εγγραφές δραστηριοποίησης. Όταν καλείται μια
+συνάρτηση μια καινούρια εγγραφή δραστηριοποίησης
+\foreignlanguage{english}{r}
+προστίθεται στο σωρό, η διεύθυνση της
+προηγούμενης εγγραφής δραστηριοποίησης ανατίθεται σε ένα πεδίο
+\foreignlanguage{english}{prev}
+της
+\foreignlanguage{english}{r}
+(όλες οι εγγραφές
+δραστηριοποίησης έχουν από ένα τέτοιο πεδίο), και ο \foreignlanguage{english}{stack pointer} δείχνει στην
+\foreignlanguage{english}{r}
+. Όταν η συνάρτηση επιστρέψει ο \foreignlanguage{english}{stack pointer} παίρνει την τιμή του πεδίου
+\foreignlanguage{english}{prev}
+και κατά συνέπεια με αυτόν τον
+τρόπο η προηγούμενη τρέχουσα εγγραφή δραστηριοποίησης “βγαίνει” (“\foreignlanguage{english}{pop}”) από τη στοίβα.
+Εξετάστε τη συνολική δουλειά που πρέπει να γίνει σε κάποια τέτοια υλοποίηση για να δεσμευθεί,
+μπει (\foreignlanguage{english}{push}), βγει (\foreignlanguage{english}{pop}), και αποδεσμευθεί μια εγγραφή δραστηριοποίησης εάν ο συλλέκτης σκουπιδιών δουλεύει με τον αλγόριθμο του μαρκαρίσματος και σκουπίσματος (\foreignlanguage{english}{mark-and-sweep}), και
+συγκρίνετε το κόστος της με το συνολικό κόστος των ίδιων ενεργειών (δηλ. δέσμευση, \foreignlanguage{english}{push, pop},
+και αποδέσμευση) αν οι εγγραφές δραστηριοποίησης είναι οργανωμένες σε “κλασσική” συνεχόμενη στοίβα. Είναι κάποια από τις δύο υλοποιήσεις γρηγορότερη από την άλλη ή έχουν πάνω-κάτω
+την ίδια επίδοση;
+
+\subsection*{Απάντηση}
+Δέσμευση: Η δέσμευση μιας εγγραφής δραστηριοποίησης κοστίζει όσο να βρεθεί ελεύθερος χώρος στο σωρό αρκετός για την εγγραφή. Το κόστος αυτό μπορεί να είναι πολύ μεγάλο αν έχουν έχουν συμβεί πολλές δεσμεύσεις και αποδεσμεύσεις με αποτέλεσμα η μνήμη να είναι \foreignlanguage{english}{fragmented}. Στην κλασσική περίπτωση \textbf{δεν} υπάρχει κόστος δέσμευσης εγγραφής δραστηριοποίησης. \\\\
+\foreignlanguage{english}{push}: Στην περίπτωση που δεν χρησιμοποιείται στοίβα το \foreignlanguage{english}{push} μίας εγγραφής απαιτεί δύο αναθέσεις (μία για το \foreignlanguage{english}{stack pointer} και μία για το \foreignlanguage{english}{prev}), ενώ στην κλασσική περίπτωση είναι μια ανάθεση αφού απλώς μεταβάλλεται ο \foreignlanguage{english}{sp} σύμφωνα με το μέγεθος μιας εγγραφής δραστηριοποίησης. \\\\
+\foreignlanguage{english}{pop}: Και στις δύο περιπτώσεις το \foreignlanguage{english}{pop} κοστίζει μία ανάθεση στον \foreignlanguage{english}{stack pointer}. \\\\
+Αποδέσμευση: Στην περίπτωση που δεν χρησιμοποιείται στοίβα και η συλλογή σκουπιδιών γίνεται με την μέθοδο \foreignlanguage{english}{mark-and-sweep} το κόστος αποδέσμευσης είναι το κόστος μιας εκτέλεσης του \foreignlanguage{english}{mark-and-sweep} το οποίο είναι αναλογικό του μεγέθους του σωρού. Εφόσον ο σωρός θα περιέχει και τις εγγραφές δραστηριοποίησης μπορούμε να υποθέσουμε ότι θα έχει και μεγαλύτερο μέγεθος με αποτέλεσμα το ένα πέρασμα του \foreignlanguage{english}{mark-and-sweep} να κοστίζει περισσότερο. Αξίζει να τονιστεί ότι η αποδέσμευση στην και στις δύο υλοποιήσεις δεν κοστίζει καθόλου τη στιγμή που γίνεται (απλώς στην περίπτωση χωρίς στοίβα επιβαρύνει το πέρασμα του συλλέκτη σκουπιδιών).
+
+\section*{Ερώτηση 5η}
+Απαντήστε την παραπάνω ερώτηση αν χρησιμοποιείται ένας \foreignlanguage{english}{stop-and-copy} συλλέκτης σκουπιδιών.
+\subsection*{Απάντηση}
+Δέσμευση: Η δέσμευση μιας εγγραφής δραστηριοποίησης κοστίζει σταθερό χρόνο μιας μεταβολής του \foreignlanguage{english}{heap pointer} αφού η μέθοδος \foreignlanguage{english}{stop-and-copy} δεν προκαλεί \foreignlanguage{english}{fragmentation} στη μνήμη. \\\\
+\foreignlanguage{english}{push}: Όπως και παραπάνω. \\\\
+\foreignlanguage{english}{pop}: Όπως και παραπάνω. \\\\
+Αποδέσμευση: Στην περίπτωση που δεν χρησιμοποιείται στοίβα και η συλλογή σκουπιδιών γίνεται με την μέθοδο \foreignlanguage{english}{stop-and-copy} το κόστος αποδέσμευσης είναι το κόστος μιας εκτέλεσης του \foreignlanguage{english}{stop-and-copy} το οποίο είναι αναλογικό των \foreignlanguage{english}{reachable} δεδομένων στο σωρό. Τα \foreignlanguage{english}{reachable} δεδομένα δεν θα αλλάζουν αφού οι παλιές εγγραφές δραστηριοποίησης δεν είναι προσιτές. Οπότε το πέρασμα του συλλέκτη φαίνεται εκ πρώτης όψεως να κοστίζει το ίδιο. Παρόλαυτα επειδή οι παλιές εγγραφές δραστηριοποίησης πιάνουν χώρο στο σωρό θα χρειάζεται να καλείται ο συλλέκτης πιο συχνά και κατά συνέπεια θα έχει μεγαλύτερο κόστος. Τονίζεται ότι όπως και παραπάνω η αποδέσμευση δεν κοστίζει καθόλου τη στιγμή που γίνεται.
+\end{document}
